@@ -1,0 +1,28 @@
+on:
+  push:
+    branches:
+      - master
+
+name: SonarQube Analysis
+jobs:
+  sonarqube:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
+    - name: Create SonarQube Keystore
+      run: echo "${{ secrets.SONAR_KEYSTORE_BASE64 }}" | base64 -decode > keystore.p12
+    - name: SonarQube Scan
+      uses: sonarsource/sonarqube-scan-action@master
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      with:
+        projectBaseDir: src
+        args: >
+          -Djavax.net.ssl.keyStore=keystore.p12
+          -Djavax.net.ssl.keyStorePassword=${{ secrets.SONAR_KEYSTORE_PASSWORD }}
+    - name: Delete SonarQube Keystore
+      run: rm keystore.p12
