@@ -30,7 +30,6 @@ jobs:
         args: >
           -Dsonar.projectKey=MYPOSASTEV
           -Dsonar.branch.name=angular-realworld-example-app
-          -X
   
     - name: Delete SonarQube Keystore
       run: rm keystore.p12
