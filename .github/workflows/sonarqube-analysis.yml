@@ -19,9 +19,10 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_SCANNER_OPTS: "-Djavax.net.ssl.keyStore=$PWD/keystore.p12 -Djavax.net.ssl.keyStorePassword=${{ secrets.SONAR_KEYSTORE_PASSWORD }}"
+        # projectBaseDir is mapped to /usr/src
+        SONAR_SCANNER_OPTS: "-Djavax.net.ssl.keyStore=/usr/src/keystore.p12 -Djavax.net.ssl.keyStorePassword=${{ secrets.SONAR_KEYSTORE_PASSWORD }}"
       with:
-        projectBaseDir: src
+        projectBaseDir: .
         args: >
           -Dsonar.projectKey=MYPOSASTEV
           -Dsonar.branch.name=angular-realworld-example-app
