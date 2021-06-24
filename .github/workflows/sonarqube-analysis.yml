@@ -15,7 +15,7 @@ jobs:
         fetch-depth: 0
 
     - name: Create SonarQube Keystore
-      run: echo "${{ secrets.SONAR_KEYSTORE_BASE64 }}" | base64 --decode > $PWD/keystore.p12
+      run: echo "${{ secrets.SONAR_KEYSTORE_BASE64 }}" | base64 --decode > $GITHUB_WORKSPACE/keystore.p12
       
     # https://github.com/SonarSource/sonarqube-scan-action
     - name: SonarQube Scan
@@ -23,10 +23,9 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        # projectBaseDir is mapped to /github/workspace
+        # $GITHUB_WORKSPACE is mapped to /github/workspace
         SONAR_SCANNER_OPTS: "-Djavax.net.ssl.keyStore=/github/workspace/keystore.p12 -Djavax.net.ssl.keyStorePassword=${{ secrets.SONAR_KEYSTORE_PASSWORD }}"
       with:
-        projectBaseDir: .
         args: >
           -Dsonar.projectKey=MYPOSASTEV
           -Dsonar.branch.name=angular-realworld-example-app
